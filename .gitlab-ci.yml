@@ -1,0 +1,21 @@
+image: mapiadev/python-nodejs
+
+cache:
+  key: "$CI_BUILD_REF_NAME"
+  paths:
+    - node_modules/
+
+# Build - Build necessary JS files
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+  tags:
+    - frontend
