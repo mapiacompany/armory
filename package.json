@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build armory",
+    "build:translate": "ng build ngx-translate-extend",
     "publish": "npm publish dist/armory/ --access public",
     "test": "ng test",
     "lint": "ng lint",

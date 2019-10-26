@@ -20,5 +20,5 @@ import { TranslateExtendService } from './translate.service';
     TranslateExtendPipe
   ]
 })
-export class NgxTranslateExtendModule {
+export class TranslateExtendModule {
 }

@@ -8,9 +8,9 @@ import { TRANSLATE_PREFIX } from './token';
 })
 export class TranslateExtendPipe extends TranslatePipe {
   constructor(
+    @Inject(TRANSLATE_PREFIX) public prefix: string,
     translate: TranslateService,
-    _ref: ChangeDetectorRef,
-    @Inject(TRANSLATE_PREFIX) public prefix: string
+    _ref: ChangeDetectorRef
   ) {
     super(translate, _ref);
   }
