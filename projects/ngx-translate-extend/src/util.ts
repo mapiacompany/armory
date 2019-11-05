@@ -4,6 +4,6 @@ import { Provider } from '@angular/core';
 export function setTranslatePrefix(prefix): Provider {
   return {
     provide: TRANSLATE_PREFIX,
-    useValue: prefix
+    useValue: prefix, multi: true
   };
 }
