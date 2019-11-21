@@ -1,7 +1,7 @@
 import { Directive, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  selector: '[mcInsertion]'
+  selector: '[armInsertion]'
 })
 export class InsertionDirective {
 

@@ -8,7 +8,8 @@ import {
   OnDestroy,
   Type,
   ViewChild,
-  OnInit
+  OnInit,
+  HostListener
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { DialogConfig } from './dialog-config';
@@ -16,7 +17,7 @@ import { InsertionDirective } from './insertion.directive';
 import { DialogRef } from './dialog-ref';
 
 @Component({
-  selector: 'mc-dialog',
+  selector: 'arm-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss'],
   animations: [
@@ -44,6 +45,15 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly onClose = new Subject<any>();
   public onClose$ = this.onClose.asObservable();
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.config.accessiblility) {
+      if (event.key === 'Escape') {
+        this.close();
+      }
+    }
+  }
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,

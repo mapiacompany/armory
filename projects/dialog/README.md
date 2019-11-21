@@ -1,24 +1,202 @@
-# Dialog
+# ngx-dialog
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.3.
+Open dialog modal page with component page or template.
 
-## Code scaffolding
 
-Run `ng generate component component-name --project dialog` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project dialog`.
-> Note: Don't forget to add `--project dialog` or else it will be added to the default project in your `angular.json` file. 
 
-## Build
+## API
 
-Run `ng build dialog` to build the project. The build artifacts will be stored in the `dist/` directory.
+#### DialogService
 
-## Publishing
+```typescript
+open(componentType: Type<any>, config: DialogConfig<any> = {})
+```
 
-After building your library with `ng build dialog`, go to the dist folder `cd dist/dialog` and run `npm publish`.
+Modal dialog open api.
 
-## Running unit tests
+###### Template open
 
-Run `ng test dialog` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- ```this.dialogService.open(templateContent);```
 
-## Further help
+###### Component open
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- ```this.dialogService.open(contentComponent);```
+
+
+
+#### DialogConfig
+
+```typescript
+export class DialogConfig<D = any> {
+  data?: D;
+  size?: 'sm' | 'md' | 'lg' | 'full';
+  width?: string;
+  height?: string;
+  closeButton?: boolean;
+  fade?: boolean;
+  backDrop?: boolean;
+}
+```
+
+###### dialog config options ```optional```
+
+- ``` data: any```
+
+  User custom dialog initial data
+
+- ```size: 'sm' | 'md' | 'lg' | 'full'```
+
+  Dialog width option (%)
+
+- ```width: string```
+
+  Dialog width option css type (ex: '200px', '100vw', '23%')
+
+- ```height: string```
+
+  Dialog height option css type (ex: '200px', '100vh')
+
+- ```closeButton: boolean```
+
+  X close button option at right top side
+
+- ```fade: boolean```
+
+  Fade in, fade out option when dialog appear, disappear
+
+- ```backDrop: boolean```
+
+  Dialog close option when background click
+
+- ```accessibility: boolean```
+
+  Keyboard input option (ex: 'Escape' key close)
+
+
+
+#### DialogRef
+
+```typescript
+close(result?: any)
+```
+
+Close current dialog
+
+- ```this.dialogRef.close();```
+
+
+
+## Example
+
+```...module.ts```
+
+```typescript
+import { DialogModule } from '@mapiacompany/ngx-dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+@NgModule({
+  declarations: [
+    ...,
+    AppDialogComponent
+  ],
+  imports: [
+    ...,
+    DialogModule,
+    BrowserAnimationsModule
+  ],
+  entryComponents: [
+    AppDialogComponent // dialog content component
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+
+export class AppModule { }
+```
+
+
+
+```...component.html```
+
+```html
+<button type="button" (click)="openTemp(content)">Dialog template OPEN!</button>
+<button type="button" (click)="openComp(content)">Dialog component OPEN!</button>
+<ng-template #content>
+  <div style="text-align:center; height: 200px;">
+    <h1>template!!</h1>
+    <button (click)="close()">Dialog CLOSE!</button>
+  </div>
+</ng-template>
+
+```
+
+```...component.ts```
+
+```typescript
+export class AppComponent implements OnInit {
+  private dialogRef: DialogRef;
+
+  constructor(
+    private dialogServ: DialogService,
+  ) { }
+
+  // open dialog with template 
+  openTemp(content) {
+    this.dialogRef = this.dialogServ.open(content, { backDrop: true, fade: true });
+  }
+
+  // open dialog with component
+  openComp() {
+    this.dialogRef = this.dialogServ.open(
+      AppDialogComponent, 
+      { data: { title: 'COMPONENT'}, backDrop: false, fade: true }
+    );
+
+    this.dialogRef.afterClosed$.subscribe(result => {
+      console.log('Dialog closed', result);
+    });
+  }
+
+  closeTemp() {
+    this.dialogRef.close();
+  }
+  
+  ngOnInit() { }
+}
+
+```
+
+
+
+```dialog page ...component.html```
+
+```html
+<div style="text-align:center; height: 200px;">
+  <h1>{{title}}</h1>
+  <button (click)="close()">Dialog CLOSE!</button>
+</div>
+```
+
+```dialog page ...component.ts```
+
+```
+export class AppDialogComponent implements OnInit {
+
+  title: string;
+
+  constructor(
+    private dialogOpt: DialogConfig,
+    private dialogRef: DialogRef
+  ) {
+  }
+
+  close() {
+    this.dialogRef.close({ result: 'component close.' });
+  }
+
+  ngOnInit() {
+    this.title = this.dialogOpt.data.title;
+  }
+}
+```
+

@@ -6,4 +6,5 @@ export class DialogConfig<D = any> {
   closeButton?: boolean;
   fade?: boolean;
   backDrop?: boolean;
+  accessiblility?: boolean;
 }
