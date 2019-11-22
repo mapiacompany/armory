@@ -1,0 +1,10 @@
+<div [@.disabled]="!config.fade" [@fadeIn]="fadeStatus ? true : false" (@fadeIn.done)="onAnimationEvent($event)">
+  <div class="overlay"  (click)="onOverlayClicked($event)">
+    <div class="dialog" [ngClass]="config.size" [style.width]="config.width" [style.height]="config.height" (click)="onDialogClicked($event)">
+      <button *ngIf="config.closeButton" type="button" (click)="close()">
+        <span>&times;</span>
+      </button>
+      <ng-template armInsertion></ng-template>
+    </div>
+  </div>
+</div>
