@@ -1,4 +1,4 @@
-# ngx-dialog
+# arm-dialog
 
 Open dialog modal page with component page or template.
 
@@ -28,7 +28,7 @@ Modal dialog open api.
 
 ```typescript
 export class DialogConfig<D = any> {
-  data?: D;
+  initialState?: D;
   size?: 'sm' | 'md' | 'lg' | 'full';
   width?: string;
   height?: string;
@@ -40,7 +40,7 @@ export class DialogConfig<D = any> {
 
 ###### dialog config options ```optional```
 
-- ``` data: any```
+- ``` initialState: any```
 
   User custom dialog initial data
 
@@ -149,7 +149,7 @@ export class AppComponent implements OnInit {
   openComp() {
     this.dialogRef = this.dialogServ.open(
       AppDialogComponent, 
-      { data: { title: 'COMPONENT'}, backDrop: false, fade: true }
+      { initialState: { title: 'COMPONENT'}, backDrop: false, fade: true }
     );
 
     this.dialogRef.afterClosed$.subscribe(result => {
@@ -185,7 +185,6 @@ export class AppDialogComponent implements OnInit {
   title: string;
 
   constructor(
-    private dialogOpt: DialogConfig,
     private dialogRef: DialogRef
   ) {
   }
@@ -195,7 +194,6 @@ export class AppDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title = this.dialogOpt.data.title;
   }
 }
 ```

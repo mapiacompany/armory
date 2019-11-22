@@ -89,6 +89,7 @@ export class DialogComponent implements OnInit, AfterViewInit, OnDestroy {
       case 'function':
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentType);
         this.componentRef = viewContainerRef.createComponent(componentFactory);
+        Object.assign(this.componentRef.instance, this.config.initialState);
         break;
       default:
     }

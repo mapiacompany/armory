@@ -1,5 +1,5 @@
 export class DialogConfig<D = any> {
-  data?: D;
+  initialState?: D;
   size?: 'sm' | 'md' | 'lg' | 'full';
   width?: string;
   height?: string;
