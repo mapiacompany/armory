@@ -1,6 +1,6 @@
 {
   "name": "@mapiacompany/armory",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "peerDependencies": {
     "@ngrx/store": "^8.4.0",
     "@angular/common": "^9.0.0-rc.4",
