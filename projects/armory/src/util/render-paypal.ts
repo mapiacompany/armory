@@ -102,7 +102,7 @@ export function renderPaypalButton(
     }
   }, elementSelector);
 
-  return { onSuccess$: result$.asObservable(), status$: status$.asObservable() };
+  return { result$: result$.asObservable(), status$: status$.asObservable() };
 }
 
 export function renderPaypalSmartButton(
@@ -113,7 +113,7 @@ export function renderPaypalSmartButton(
   description?: string
 ) {
   const status$ = new BehaviorSubject(AsyncStatus.INITIAL);
-  const result$ = new Subject<{ paymentID, payerID }>();
+  const result$ = new Subject<{ orderID, payerID }>();
 
   const renderButton = () => {
     paypal.Buttons({
@@ -169,7 +169,7 @@ export function renderPaypalSmartButton(
     renderButton();
   }
 
-  return { status$, result$ };
+  return { status$: status$.asObservable(), result$: result$.asObservable() };
 }
 
 function loadScript(url, callback) {
