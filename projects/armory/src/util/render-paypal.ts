@@ -39,7 +39,7 @@ declare const paypal;
     });
 ```
 */
-
+// @deprecated
 export function renderPaypalButton(
   elementSelector: string, // 'DOM element 선택자 (ex, #paypal-button-container)'
   env: 'sandbox' | 'production', // 현재 환경이 sandbox인지 production인지
@@ -50,57 +50,68 @@ export function renderPaypalButton(
   const status$ = new BehaviorSubject(AsyncStatus.INITIAL);
   const result$ = new Subject<{ paymentID, payerID }>();
 
-  paypal.Button.render({
-    env, // sandbox | production
+  const renderButton = () => {
+    paypal.Button.render({
+      env, // sandbox | production
 
-    // PayPal Client IDs - replace with your own
-    // Create a PayPal app: https://developer.paypal.com/developer/applications/create
-    client: config.client_id,
+      // PayPal Client IDs - replace with your own
+      // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+      client: config.client_id,
 
-    // Show the buyer a 'Pay Now' button in the checkout flow
-    commit: true,
+      // Show the buyer a 'Pay Now' button in the checkout flow
+      commit: true,
 
-    // payment() is called when the button is clicked
-    payment: (data, actions) => {
-      status$.next(AsyncStatus.PENDING);
+      // payment() is called when the button is clicked
+      payment: (data, actions) => {
+        status$.next(AsyncStatus.PENDING);
 
-      const items = loadItems();
-      const totalPrice = items.reduce((res, cur) => res + cur.price, 0);
+        const items = loadItems();
+        const totalPrice = items.reduce((res, cur) => res + cur.price, 0);
 
-      // Make a call to the REST api to create the payment
-      return actions.payment.create({
-        transactions: [
-          {
-            item_list: {
-              items: items.map(({ name, sku, price }) => {
-                return {
-                  name, sku, price,
-                  currency: config.currency,
-                  quantity: 1
-                };
-              })
-            },
-            amount: {
-              total: totalPrice, currency: config.currency
-            },
-            description
-          }
-        ]
-      });
-    },
+        // Make a call to the REST api to create the payment
+        return actions.payment.create({
+          transactions: [
+            {
+              item_list: {
+                items: items.map(({ name, sku, price }) => {
+                  return {
+                    name, sku, price,
+                    currency: config.currency,
+                    quantity: 1
+                  };
+                })
+              },
+              amount: {
+                total: totalPrice, currency: config.currency
+              },
+              description
+            }
+          ]
+        });
+      },
 
-    onCancel: (err) => {
-      status$.next(AsyncStatus.REJECTED);
-      result$.thrownError(err);
-    },
+      onCancel: (err) => {
+        status$.next(AsyncStatus.REJECTED);
+        result$.thrownError(err);
+      },
 
-    // onAuthorize() is called when the buyer approves the payment
-    onAuthorize: (data, actions) => {
-      status$.next(AsyncStatus.FULFILLED);
-      result$.next(data);
-      result$.complete();
-    }
-  }, elementSelector);
+      // onAuthorize() is called when the buyer approves the payment
+      onAuthorize: (data, actions) => {
+        status$.next(AsyncStatus.FULFILLED);
+        result$.next(data);
+        result$.complete();
+      }
+    }, elementSelector);
+  };
+
+  if (typeof paypal === 'undefined') {
+    loadScript(
+      `https://www.paypalobjects.com/api/checkout.js`,
+      renderButton
+    );
+  } else {
+    renderButton();
+  }
 
   return { result$: result$.asObservable(), status$: status$.asObservable() };
 }
@@ -164,7 +175,10 @@ export function renderPaypalSmartButton(
   };
 
   if (typeof paypal === 'undefined') {
-    loadScript('https://www.paypal.com/sdk/js?client-id=' + config.client_id[env], renderButton);
+    loadScript(
+      `https://www.paypal.com/sdk/js?currency=${config.currency}&client-id=${config.client_id[env]}`,
+      renderButton
+    );
   } else {
     renderButton();
   }
