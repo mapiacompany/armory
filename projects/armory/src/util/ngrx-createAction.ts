@@ -1,8 +1,7 @@
-import { ActionCreator, createAction } from '@ngrx/store';
-import { TypedAction } from '@ngrx/store/src/models';
+import { ActionCreator, createAction, props } from '@ngrx/store';
 
-export type NonPropsActionCreator = ActionCreator<string, () => TypedAction<string>>;
-export type PropsActionCreator<T> = ActionCreator<string, (props: T) => T & TypedAction<string>>;
+export type NonPropsActionCreator = ActionCreator<string, () => ReturnType<typeof createAction>>;
+export type PropsActionCreator<T> = ActionCreator<string, (props: T) => ReturnType<typeof createAction>>;
 
 export interface PropsType<T> {
   _as: 'props';
