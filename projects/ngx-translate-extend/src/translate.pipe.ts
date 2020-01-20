@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Inject, Pipe } from '@angular/core';
+import { ChangeDetectorRef, Inject, Pipe, SkipSelf } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TRANSLATE_PREFIX } from './token';
 
@@ -8,7 +8,7 @@ import { TRANSLATE_PREFIX } from './token';
 })
 export class TranslateExtendPipe extends TranslatePipe {
   constructor(
-    @Inject(TRANSLATE_PREFIX) public prefix: string,
+    @SkipSelf() @Inject(TRANSLATE_PREFIX) public prefix: string,
     translate: TranslateService,
     _ref: ChangeDetectorRef
   ) {
