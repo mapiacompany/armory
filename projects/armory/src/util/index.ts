@@ -5,3 +5,4 @@ export * from './ngrx-createAction';
 export * from './ngrx-async-status';
 export * from './ngrx-createActionWithStatus';
 export * from './render-paypal';
+export * from './mcash-payment';
