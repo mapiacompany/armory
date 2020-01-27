@@ -119,6 +119,9 @@ export function OPEN_MCASH_PAYMENT(
   createInput('Userid', transaction.userId);
   createInput('Prdtprice', transaction.price);
   createInput('Tradeid', transaction.uuid);
+  if (transaction.MSTR) {
+    createInput('MSTR', transaction.MSTR);
+  }
 
   switch (transaction.formTarget) {
     case 'iframe':
