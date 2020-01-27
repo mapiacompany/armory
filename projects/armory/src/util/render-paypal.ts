@@ -92,7 +92,7 @@ export function renderPaypalButton(
 
       onCancel: (err) => {
         status$.next(AsyncStatus.REJECTED);
-        result$.thrownError(err);
+        result$.error(err);
       },
 
       // onAuthorize() is called when the buyer approves the payment
@@ -169,7 +169,7 @@ export function renderPaypalSmartButton(
       },
       onError: (err) => {
         status$.next(AsyncStatus.REJECTED);
-        result$.thrownError(err);
+        result$.error(err);
       }
     }).render(elementSelector);
   };
