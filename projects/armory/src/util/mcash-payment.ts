@@ -57,7 +57,8 @@ export function OPEN_MCASH_PAYMENT(
       RA: string,
       [key: string]: string // 미래에 추가 될 새로운 결제 수단을 고려
     }>,
-    MOB_CASH_GB_DICT?: { [key: string]: string } // 미래에 추가 될 새로운 결제 수단을 고려
+    MOB_CASH_GB_DICT?: { [key: string]: string }, // 미래에 추가 될 새로운 결제 수단을 고려
+    additionalForm?: { [key: string]: string } // 커스텀해서 넣어보고 싶은 입력들
   },
   transaction: {
     method: keyof typeof MOB_CASH_GB_DICT | string,
@@ -100,6 +101,12 @@ export function OPEN_MCASH_PAYMENT(
   createInput('Okurl', config.urls.ok);
   Object.keys(config.SVC_IDS).forEach(method => {
     createInput(method + '_SVCID', config.SVC_IDS[method]);
+    if (method === 'HM') {
+      // 해피머니 상품권 서비스일 경우에는,
+      // 해피머니로 지불할지 모바일팝으로 지불할지를 HM/HP 중에 선택하게 되는데
+      // 당사 계약은 무조건 해피머니이므로 이처럼 HM으로 대입
+      createInput('HM_SVC_GB', 'HM');
+    }
   });
 
   // MOB_CASH_GB_DICT에서 먼저 찾아보고 없으면 config에서 찾음. config.MOB_CASH_GB_DICT가 설정되어있지 않은 경우도 고려.
@@ -153,6 +160,13 @@ export function OPEN_MCASH_PAYMENT(
       }
       PAY_WIN.focus();
       break;
+  }
+
+  // 커스텀 폼 데이터 주입
+  if (config.additionalForm) {
+    Object.keys(config.additionalForm).forEach(key => {
+      createInput(key, config.additionalForm[key]);
+    });
   }
 
   // 결제 시도 -> 취소 -> 결제 시도 하는 경우, 그전에 만들어둔 form 태그때문에 제대로 동작하지 않는 문제가 있어 지우기 작업 진행
