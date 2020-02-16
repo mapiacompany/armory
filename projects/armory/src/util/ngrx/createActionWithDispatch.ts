@@ -11,9 +11,12 @@ export interface PropsType<T> {
 }
 
 export type NonPropsActionCreator =
-  ActionCreator<string, (comp?: ComponentWithStore) => ReturnType<typeof createAction>>;
+  ActionCreator<string, (comp: ComponentWithStore) => ReturnType<typeof createAction>> &
+  ActionCreator<string, () => ReturnType<typeof createAction>>;
+
 export type PropsActionCreator<T> =
-  ActionCreator<string, (comp: ComponentWithStore | T, props?: T) => T & ReturnType<typeof createAction>>;
+  ActionCreator<string, (comp: ComponentWithStore, props: T) => T & ReturnType<typeof createAction>> &
+  ActionCreator<string, (props: T) => T & ReturnType<typeof createAction>>;
 
 export function createActionWithDispatch(type: string): NonPropsActionCreator;
 export function createActionWithDispatch<T extends object>(type: string, data: PropsType<T>): PropsActionCreator<T>;
