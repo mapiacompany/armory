@@ -1,6 +1,7 @@
-import { ActionReducer, createAction, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
-import { AsyncStatus } from './ngrx-async-status';
-import { NonPropsActionCreator, PropsActionCreator, PropsType } from './ngrx-createAction';
+import { ActionReducer, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { AsyncStatus } from '../async-status';
+import { createActionExtend } from './createActionExtend';
+import { NonPropsActionCreator, PropsActionCreator, PropsType } from './createActionWithDispatch';
 
 // tslint:disable-next-line:no-empty-interface
 export interface AsyncStatusState {
@@ -32,6 +33,9 @@ export const selectAsyncStatusFeature = createFeatureSelector<AsyncStatusState>(
  *    success: props<{ userId: number, result: any }>(),
  *    failure: props<{ userId: number, result: any }>()
  * });
+ *
+ * loadRoomId.on 을 ngrx global state에 선언해주고,
+ * this.store.select(loadRoomId.status) 를 이용하면 됩니다.
  *
  * begin, success, failure props를 넘길지 안넘기는지에 따라 자동으로 힌팅이 되도록 하기 위해
  * B, S, F 타입에 대한 모든 return type을 명시해주었습니다.
@@ -77,13 +81,9 @@ export function createActionWithStatus<B extends object, S extends object, F ext
   success?: PropsType<S>,
   failure?: PropsType<F>
 }) {
-  const { type, begin, success, failure } = data;
-  const successType = type + ' success';
-  const failType = type + ' failure';
+  const { type } = data;
   const result = {
-    BEGIN: begin ? createAction(type, begin) : createAction(type),
-    SUCCESS: success ? createAction(successType, success) : createAction(successType),
-    FAILURE: failure ? createAction(failType, failure) : createAction(failType),
+    ...createActionExtend(data),
     on: [],
     status: createSelector(selectAsyncStatusFeature, (state: AsyncStatusState) => {
       if (!state) {

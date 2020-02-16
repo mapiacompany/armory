@@ -1,5 +1,5 @@
 import { BehaviorSubject, Subject } from 'rxjs';
-import { AsyncStatus } from './ngrx-async-status';
+import { AsyncStatus } from './async-status';
 
 declare const paypal;
 

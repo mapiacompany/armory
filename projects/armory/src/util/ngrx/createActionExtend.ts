@@ -1,12 +1,9 @@
-import { ActionCreator, createAction } from '@ngrx/store';
-
-export type NonPropsActionCreator = ActionCreator<string, () => ReturnType<typeof createAction>>;
-export type PropsActionCreator<T> = ActionCreator<string, (props: T) => T & ReturnType<typeof createAction>>;
-
-export interface PropsType<T> {
-  _as: 'props';
-  _p: T;
-}
+import {
+  createActionWithDispatch,
+  NonPropsActionCreator,
+  PropsActionCreator,
+  PropsType
+} from './createActionWithDispatch';
 
 export interface ActionsReturnTypes<B, S, F> {
   BEGIN: B;
@@ -61,6 +58,7 @@ export function createActionExtend<B extends object, S extends object, F extends
  *
  * @description
  * do, success, failure 3개 액션으로 이루어진 effects action들을 만들 때 유용합니다.
+ * this.store.dispatch 를 매번 해주지 않고, this만 넘기면 알아서 해주도록 하기 위해 아래와 같은 함수를 구현했습니다.
  */
 export function createActionExtend<B extends object, S extends object, F extends object>(data: {
   type: string,
@@ -71,9 +69,10 @@ export function createActionExtend<B extends object, S extends object, F extends
   const { type, begin, success, failure } = data;
   const successType = type + ' success';
   const failType = type + ' failure';
+
   return {
-    BEGIN: begin ? createAction(type, begin) : createAction(type),
-    SUCCESS: success ? createAction(successType, success) : createAction(successType),
-    FAILURE: failure ? createAction(failType, failure) : createAction(failType)
+    BEGIN: createActionWithDispatch(type, begin),
+    SUCCESS: createActionWithDispatch(successType, success),
+    FAILURE: createActionWithDispatch(failType, failure)
   };
 }
