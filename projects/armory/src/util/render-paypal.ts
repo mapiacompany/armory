@@ -39,6 +39,7 @@ declare const paypal;
     });
 ```
 */
+
 // @deprecated
 export function renderPaypalButton(
   elementSelector: string, // 'DOM element 선택자 (ex, #paypal-button-container)'
@@ -49,6 +50,7 @@ export function renderPaypalButton(
 ) {
   const status$ = new BehaviorSubject(AsyncStatus.INITIAL);
   const result$ = new Subject<{ paymentID, payerID }>();
+  const error$ = new Subject();
 
   const renderButton = () => {
     paypal.Button.render({
@@ -92,14 +94,13 @@ export function renderPaypalButton(
 
       onCancel: (err) => {
         status$.next(AsyncStatus.REJECTED);
-        result$.error(err);
+        error$.next(err);
       },
 
       // onAuthorize() is called when the buyer approves the payment
       onAuthorize: (data, actions) => {
         status$.next(AsyncStatus.FULFILLED);
         result$.next(data);
-        result$.complete();
       }
     }, elementSelector);
   };
@@ -125,6 +126,7 @@ export function renderPaypalSmartButton(
 ) {
   const status$ = new BehaviorSubject(AsyncStatus.INITIAL);
   const result$ = new Subject<{ orderID, payerID }>();
+  const error$ = new Subject();
 
   const renderButton = () => {
     paypal.Buttons({
@@ -165,11 +167,10 @@ export function renderPaypalSmartButton(
       onApprove: (data, actions) => {
         status$.next(AsyncStatus.FULFILLED);
         result$.next(data);
-        result$.complete();
       },
       onError: (err) => {
         status$.next(AsyncStatus.REJECTED);
-        result$.error(err);
+        error$.next(err);
       }
     }).render(elementSelector);
   };
