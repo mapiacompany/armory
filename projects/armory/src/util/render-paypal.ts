@@ -114,7 +114,7 @@ export function renderPaypalButton(
     renderButton();
   }
 
-  return { result$: result$.asObservable(), status$: status$.asObservable() };
+  return { result$: result$.asObservable(), status$: status$.asObservable(), error$: error$.asObservable() };
 }
 
 export function renderPaypalSmartButton(
@@ -184,7 +184,7 @@ export function renderPaypalSmartButton(
     renderButton();
   }
 
-  return { status$: status$.asObservable(), result$: result$.asObservable() };
+  return { status$: status$.asObservable(), result$: result$.asObservable(), error$: error$.asObservable() };
 }
 
 function loadScript(url, callback) {
