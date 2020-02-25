@@ -71,6 +71,7 @@ export function OPEN_MCASH_PAYMENT(
     MSTR?: string // 암호화 값
   }
 ): Observable<boolean> {
+  let PAY_WIN;
   const form: HTMLFormElement = document.createElement('form');
   form.name = 'mcashMapiaForm';
   form.acceptCharset = 'UTF-8';
@@ -143,7 +144,6 @@ export function OPEN_MCASH_PAYMENT(
     case 'popup':
       form.target = 'PAY_WIN';
 
-      let PAY_WIN;
       if (IS_MOBILE()) {
         PAY_WIN = window.open('', 'PAY_WIN', 'fullscreen=yes,toolbar=yes,menubar=yes,scrollbars=no,resizable=no');
         if (!PAY_WIN) {
@@ -200,6 +200,10 @@ export function OPEN_MCASH_PAYMENT(
     if (e.data === 'CANCEL_MAPIANIST_PAYMENT' || e.data === 'CANCEL_MCASH_PAYMENT') {
       isProcessing$.next(false);
       isProcessing$.complete();
+    } else if (e.data === 'SUCCESS_MCASH_PAYMENT') {
+      if (PAY_WIN) {
+        PAY_WIN.close();
+      }
     }
   };
   return isProcessing$.asObservable().pipe(
