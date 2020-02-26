@@ -196,14 +196,9 @@ export function OPEN_MCASH_PAYMENT(
    */
   const isProcessing$ = new BehaviorSubject<boolean>(true);
   const iframeMessageReader = (e: MessageEvent) => {
-    console.log('postMessage', e);
     if (e.data === 'CANCEL_MAPIANIST_PAYMENT' || e.data === 'CANCEL_MCASH_PAYMENT') {
       isProcessing$.next(false);
       isProcessing$.complete();
-    } else if (e.data === 'SUCCESS_MCASH_PAYMENT') {
-      if (PAY_WIN) {
-        PAY_WIN.close();
-      }
     }
   };
   return isProcessing$.asObservable().pipe(
@@ -214,6 +209,7 @@ export function OPEN_MCASH_PAYMENT(
     }),
     finalize(() => {
       window.removeEventListener('message', iframeMessageReader);
+      if (PAY_WIN) PAY_WIN.close();
     })
   );
 }
