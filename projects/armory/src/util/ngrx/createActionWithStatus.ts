@@ -1,4 +1,4 @@
-import { ActionReducer, createFeatureSelector, createReducer, createSelector, on } from '@ngrx/store';
+import { ActionReducer, createFeatureSelector, createReducer, createSelector, On, on } from '@ngrx/store';
 import { AsyncStatus } from '../async-status';
 import { createActionExtend } from './createActionExtend';
 import { NonPropsActionCreator, PropsActionCreator, PropsType } from './createActionWithDispatch';
@@ -7,10 +7,12 @@ import { NonPropsActionCreator, PropsActionCreator, PropsType } from './createAc
 export interface AsyncStatusState {
 }
 
+const GLOBAL_STATUS_ON: On<any>[] = [];
+
 export function createAsyncStatusReducer(...actions: ActionsWithStatusReturnTypes<any, any, any>[]): ActionReducer<AsyncStatusState> {
   return createReducer(
     {},
-    ...actions.reduce((res, action) => [...res, ...action.on], [])
+    ...actions.reduce((res, action) => [...res, ...action.on], GLOBAL_STATUS_ON)
   );
 }
 
@@ -18,7 +20,7 @@ export interface ActionsWithStatusReturnTypes<B, S, F> {
   BEGIN: B;
   SUCCESS: S;
   FAILURE: F;
-  on: any[];
+  on: On<any>[];
   status: any;
 }
 
@@ -106,5 +108,6 @@ export function createActionWithStatus<B extends object, S extends object, F ext
       return { ...state, [type]: AsyncStatus.REJECTED };
     })
   ];
+  GLOBAL_STATUS_ON.push(...result.on);
   return result;
 }
