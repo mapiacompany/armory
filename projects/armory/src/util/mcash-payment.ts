@@ -18,14 +18,15 @@ declare const document;
 declare const window;
 
 const MOB_CASH_GB_DICT = {
-  card: 'CN',
-  payco: 'MC',
-  phone: 'MC',
-  gift: 'GM',
-  happy: 'HM',
-  game: 'GG',
-  book: 'GC',
-  ra: 'RA'
+  card: 'CN', // 카드 결제
+  payco: 'MC', // 페이코 결제
+  phone: 'MC', // 핸드폰 결제
+  gift: 'GM', // 문화상품권
+  happy: 'HM', // 해피문화상품권
+  game: 'GG', // 게임문화상품권
+  book: 'GC', // 도서문화상품권
+  ra: 'RA', // 실시간 계좌이체
+  va: 'VA' // 가상계좌 (무통장입금)
 };
 
 function IS_MOBILE() {
@@ -55,6 +56,7 @@ export function OPEN_MCASH_PAYMENT(
       GG: string,
       GC: string,
       RA: string,
+      VA: string,
       [key: string]: string // 미래에 추가 될 새로운 결제 수단을 고려
     }>,
     MOB_CASH_GB_DICT?: { [key: string]: string }, // 미래에 추가 될 새로운 결제 수단을 고려
