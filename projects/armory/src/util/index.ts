@@ -5,3 +5,4 @@ export * from './render-paypal';
 export * from './mcash-payment';
 export * from './async-status';
 export * from './ngrx/index';
+export * from './observe-property';
