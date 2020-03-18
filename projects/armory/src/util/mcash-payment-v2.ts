@@ -80,7 +80,8 @@ export function OPEN_MCASH_PAYMENT_V2(
     MSTR?: string // 암호화 값
   }
 ): Observable<MCASHPaymentResult> {
-  let PAY_WIN;
+  let popupTick;
+  let PAY_WIN: Window;
   const form: HTMLFormElement = document.createElement('form');
   form.name = 'mcashMapiaForm';
   form.acceptCharset = 'UTF-8';
@@ -223,9 +224,20 @@ export function OPEN_MCASH_PAYMENT_V2(
   return status$.asObservable().pipe(
     prepare(() => {
       window.addEventListener('message', iframeMessageReader, enablePassive());
+      if (PAY_WIN) {
+        popupTick = setInterval(() => {
+          if (PAY_WIN.closed && !status$.isStopped) { // 팝업이 닫혔는데, 아직 status＄가 끝나지 않은 경우
+            status$.next({ status: 'rejected' });
+            status$.complete();
+          }
+        }, 500);
+      }
     }),
     finalize(() => {
       window.removeEventListener('message', iframeMessageReader);
+      if (popupTick) {
+        clearInterval(popupTick);
+      }
       if (PAY_WIN) {
         PAY_WIN.close();
       }
