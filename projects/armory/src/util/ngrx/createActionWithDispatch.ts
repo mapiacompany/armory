@@ -1,21 +1,21 @@
 import { ActionCreator, createAction, Store } from '@ngrx/store';
+import type { NotAllowedCheck, TypedAction } from '@ngrx/store/src/models';
 
 export interface ComponentWithStore {
   store: Store<any>;
 }
 
-
-export interface PropsType<T> {
+export type PropsType<P extends object> = {
   _as: 'props';
-  _p: T;
-}
+  _p: P;
+} & NotAllowedCheck<P>;
 
-export type NonPropsActionCreator = ActionCreator<string, () => ReturnType<typeof createAction>>;
-
-export type PropsActionCreator<T> = ActionCreator<string, (props: T) => T & ReturnType<typeof createAction>>;
+// tslint:disable-next-line:max-line-length
+export type PropsActionCreator<P extends object> = ActionCreator<string, (props: P & NotAllowedCheck<P>) => P & TypedAction<string>>;
+export type NonPropsActionCreator = ActionCreator<string, () => TypedAction<string>>;
 
 export function createActionWithDispatch(type: string): NonPropsActionCreator;
-export function createActionWithDispatch<T extends object>(type: string, data: PropsType<T>): PropsActionCreator<T>;
+export function createActionWithDispatch<P extends object>(type: string, data: PropsType<P>): PropsActionCreator<P>;
 /**
  * @leo6104(허상민)님이 직접 만든 함수입니다.
  *
@@ -28,7 +28,7 @@ export function createActionWithDispatch<T extends object>(type: string, data: P
  *
  * this.store.dispatch 를 매번 해주지 않고, this만 넘기면 알아서 해주도록 하기 위해 아래와 같은 함수를 구현했습니다.
  */
-export function createActionWithDispatch<T extends object>(type: string, data?: PropsType<T>) {
+export function createActionWithDispatch<P extends object>(type: string, data?: PropsType<P>) {
   const action = createAction(type, data);
 
   // Function도 object이므로 action.type 으로 접근했을 때 type 값이 나오도록 defineType 호출
