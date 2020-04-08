@@ -153,7 +153,8 @@ export function renderPaypalSmartButton(
             },
             items: items
               .map(({ name, sku, price }) => ({
-                name, sku,
+                name: name.substring(0, 127),
+                sku,
                 unit_amount: {
                   value: price,
                   currency_code: config.currency
