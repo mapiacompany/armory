@@ -139,6 +139,11 @@ export function renderPaypalSmartButton(
         status$.next(AsyncStatus.PENDING);
 
         const items = loadItems();
+        if (!items) {
+          status$.next(AsyncStatus.REJECTED);
+          return Promise.reject();
+        }
+
         const totalPrice = items.reduce((res, cur) => res + cur.price, 0);
 
         // Set up the transaction
