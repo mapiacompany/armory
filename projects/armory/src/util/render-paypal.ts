@@ -68,6 +68,11 @@ export function renderPaypalButton(
         status$.next(AsyncStatus.PENDING);
 
         const items = loadItems();
+        if (!items) {
+          status$.next(AsyncStatus.REJECTED);
+          return Promise.reject();
+        }
+
         const totalPrice = items.reduce((res, cur) => res + cur.price, 0);
 
         // Make a call to the REST api to create the payment
