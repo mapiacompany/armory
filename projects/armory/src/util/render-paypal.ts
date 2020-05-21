@@ -112,6 +112,7 @@ export function renderPaypalButton(
 
   if (typeof paypal === 'undefined') {
     loadScript(
+      'armory-paypal-legacy-button',
       `https://www.paypalobjects.com/api/checkout.js`,
       renderButton
     );
@@ -188,6 +189,7 @@ export function renderPaypalSmartButton(
 
   if (typeof paypal === 'undefined') {
     loadScript(
+      'armory-paypal-smart-button',
       `https://www.paypal.com/sdk/js?currency=${config.currency}&client-id=${config.client_id[env]}`,
       renderButton
     );
@@ -198,8 +200,12 @@ export function renderPaypalSmartButton(
   return { status$: status$.asObservable(), result$: result$.asObservable(), error$: error$.asObservable() };
 }
 
-function loadScript(url, callback) {
+function loadScript(id, url, callback) {
+  if (document.getElementById(id)) {
+    return;
+  }
   const script = document.createElement('script');
+  script.id = id;
   script.type = 'text/javascript';
   script.onload = () => callback();
   script.src = url;
