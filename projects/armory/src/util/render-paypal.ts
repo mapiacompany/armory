@@ -51,18 +51,28 @@ export function renderPaypalSmartButton(
   const result$ = new Subject<{ orderID, payerID }>();
   const error$ = new Subject();
 
+  const cutNumber = (num: number) => {
+    return Math.floor(num * 100) / 100;
+  };
+
   const renderButton = () => {
     paypal.Buttons({
       createOrder: (data, actions) => {
         status$.next(AsyncStatus.PENDING);
 
-        const items = typeof loadItems === 'function' ? loadItems() : loadItems;
+        let items = typeof loadItems === 'function' ? loadItems() : loadItems;
         if (!items) {
           status$.next(AsyncStatus.REJECTED);
           return Promise.reject();
         }
+        items = items.map(item => {
+          item.price = cutNumber(item.price);
+          return item;
+        });
 
-        const totalPrice = items.reduce((res, cur) => res + cur.price, 0);
+        const totalPrice = cutNumber(
+          items.reduce((res, cur) => res + cur.price, 0)
+        );
 
         // Set up the transaction
         return actions.order.create({
