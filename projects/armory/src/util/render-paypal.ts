@@ -90,7 +90,10 @@ export function renderPaypalSmartButton(
                 quantity: 1
               })),
             description
-          }]
+          }],
+          application_context: {
+            shipping_preference: 'NO_SHIPPING'
+          }
         });
       },
       onApprove: (data, actions) => {
