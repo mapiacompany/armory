@@ -36,6 +36,7 @@ function IS_MOBILE() {
     || UserAgent.match(/LG|SAMSUNG|Samsung/) != null);
 }
 
+/** @deprecated */
 export function OPEN_MCASH_PAYMENT(
   config: {
     notiEmail: string, // 결제 알림 받을 URL (결제자 이메일 말고 가맹점 이메일)
