@@ -1,6 +1,8 @@
 import { ControlValueAccessor } from '@angular/forms';
 import { AbstractBaseComponent } from './base.component';
+import { Directive } from '@angular/core';
 
+@Directive()
 export abstract class AbstractControlValueAccessor<T = any> extends AbstractBaseComponent implements ControlValueAccessor {
   disabled: boolean;
 
