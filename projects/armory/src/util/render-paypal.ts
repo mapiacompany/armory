@@ -52,7 +52,7 @@ export function renderPaypalSmartButton(
   const error$ = new Subject();
 
   const cutNumber = (num: number) => {
-    return Math.floor(num * 100) / 100;
+    return Math.round(num * 100) / 100;
   };
 
   const renderButton = () => {
