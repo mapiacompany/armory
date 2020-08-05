@@ -61,9 +61,9 @@ export function renderPaypalSmartButton(
         status$.next(AsyncStatus.PENDING);
 
         let items = typeof loadItems === 'function' ? loadItems() : loadItems;
-        if (!items) {
+        if (!items || items instanceof Error) {
           status$.next(AsyncStatus.REJECTED);
-          return Promise.reject();
+          return Promise.reject(items || new Error('Unknown Error in armory library'));
         }
         items = items.map(item => {
           item.price = cutNumber(item.price);
