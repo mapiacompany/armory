@@ -40,11 +40,14 @@ declare const paypal;
 ```
 */
 
+export type PaypalItem = { name: string, sku: string, price: number };
+export type PaypalLoadItemReturn = PaypalItem[] | Error;
+
 export function renderPaypalSmartButton(
   elementSelector: string, // 'DOM element 선택자 (ex, #paypal-button-container)'
   env: 'sandbox' | 'production', // 현재 환경이 sandbox인지 production인지
   config: { client_id: { sandbox: string, production: string }, currency: 'USD' | 'JPY' }, // 환경변수
-  loadItems: (() => { name: string, sku: string, price: number }[]) | { name: string, sku: string, price: number }[], // 판매 상품을 리턴하는 함수
+  loadItems: (() => PaypalLoadItemReturn) | PaypalLoadItemReturn, // 판매 상품을 리턴하는 함수
   description?: string
 ) {
   const status$ = new BehaviorSubject(AsyncStatus.INITIAL);
