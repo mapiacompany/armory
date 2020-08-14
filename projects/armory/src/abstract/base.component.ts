@@ -12,7 +12,7 @@ export abstract class AbstractBaseComponent implements OnDestroy {
     }
   }
 
-  subscribeOn(obs: Observable<any>) {
-    this._sub.push(obs.subscribe());
+  subscribeOn(...observables$: Observable<any>[]) {
+    this._sub.push(...observables$.map(obs => obs.subscribe()));
   }
 }
