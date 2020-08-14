@@ -4,6 +4,10 @@ import { Observable, Subscription } from 'rxjs';
 @Directive()
 // tslint:disable-next-line:directive-class-suffix
 export abstract class AbstractBaseComponent implements OnDestroy {
+  /**
+   * @deprecated
+   * @internal
+   */
   _sub: Subscription[] = [];
 
   ngOnDestroy(): void {
@@ -12,7 +16,9 @@ export abstract class AbstractBaseComponent implements OnDestroy {
     }
   }
 
-  subscribeOn(...observables$: Observable<any>[]) {
-    this._sub.push(...observables$.map(obs => obs.subscribe()));
+  subscribeOn(...observables$: Observable<any>[]): Subscription[] {
+    const subs = observables$.map(obs => obs.subscribe());
+    this._sub.push(...subs);
+    return subs;
   }
 }
