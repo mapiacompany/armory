@@ -10,7 +10,7 @@
       "prefix": "lib",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/armory/tsconfig.lib.json",
             "project": "projects/armory/ng-package.json"
@@ -43,46 +43,6 @@
         }
       }
     },
-    "ngx-translate-extend": {
-      "projectType": "library",
-      "root": "projects/ngx-translate-extend",
-      "sourceRoot": "projects/ngx-translate-extend/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/ngx-translate-extend/tsconfig.lib.json",
-            "project": "projects/ngx-translate-extend/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/ngx-translate-extend/tsconfig.lib.prod.json"
-            }
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "projects/ngx-translate-extend/src/test.ts",
-            "tsConfig": "projects/ngx-translate-extend/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-translate-extend/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/ngx-translate-extend/tsconfig.lib.json",
-              "projects/ngx-translate-extend/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
     "dialog": {
       "projectType": "library",
       "root": "projects/dialog",
@@ -90,7 +50,7 @@
       "prefix": "arm",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "projects/dialog/tsconfig.lib.json",
             "project": "projects/dialog/ng-package.json"
